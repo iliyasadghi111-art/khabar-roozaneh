@@ -1,9 +1,125 @@
+
 <!doctype html>
-<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>مدیریت | خبر روزانه</title><link rel="stylesheet" href="style.css"></head>
-<body class="adminbody"><header class="top"><div class="wrap topin"><a class="brand" href="index.html"><span class="brandmark">خ</span><span>خبر <b>روزانه</b><small>پنل مدیریت</small></span></a><a class="adminlink" href="index.html">مشاهده سایت</a></div></header>
-<main class="wrap adminmain"><div class="section-head"><div><span class="eyebrow">مدیریت محتوا</span><h1>پنل مدیریت خبرها</h1></div><button id="logout" class="secondary hidden">خروج</button></div>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>مدیریت | خبر روزانه</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="adminbody">
+<header class="top">
+<div class="wrap topin">
+<a class="brand" href="index.html">
+<span class="brandmark">خ</span>
+<span>خبر <b>روزانه</b><small>پنل مدیریت</small></span>
+</a>
+<a class="adminlink" href="index.html">مشاهده سایت</a>
+</div>
+</header>
+
+<main class="wrap adminmain">
+<div class="section-head">
+<div><span class="eyebrow">مدیریت محتوا</span><h1>پنل مدیریت خبرها</h1></div>
+<button id="logout" class="secondary hidden">خروج</button>
+</div>
+
 <div id="setup-warning" class="notice hidden"></div>
-<section id="login-box" class="panel login"><h2>ورود مدیر</h2><p class="muted">با ایمیل و رمز عبور مدیر وارد شوید.</p><form id="login-form"><label>ایمیل<input id="email" type="email" required autocomplete="username"></label><label>رمز عبور<input id="password" type="password" required autocomplete="current-password"></label><button class="cta" type="submit">ورود به مدیریت</button></form><p id="login-msg" class="msg"></p></section>
-<section id="dashboard" class="hidden"><form id="news-form" class="panel"><h2 id="form-title">افزودن خبر جدید</h2><input id="news-id" type="hidden"><div class="formgrid"><label>عنوان خبر<input id="title" maxlength="180" required placeholder="عنوان خبر را بنویسید"></label><label>دسته‌بندی<select id="category"><option>سیاسی</option><option>اقتصادی</option><option>اجتماعی</option><option>ورزشی</option><option>فناوری</option><option>فرهنگ و هنر</option><option>بین‌الملل</option></select></label><label class="full">لینک تصویر (اختیاری)<input id="image" type="url" placeholder="https://..."></label><label class="full">متن خبر<textarea id="body" rows="7" required placeholder="متن خبر..."></textarea></label><label>نام منبع<input id="source" placeholder="مثلاً ایرنا"></label><label>لینک منبع (اختیاری)<input id="source-url" type="url" placeholder="https://..."></label></div><div class="actions"><button class="cta" type="submit">ذخیره خبر</button><button id="cancel-edit" class="secondary hidden" type="button">لغو ویرایش</button></div><p id="form-msg" class="msg"></p></form>
-<section class="panel"><div class="section-head"><h2>خبرهای منتشرشده</h2><button id="reload" class="secondary">بروزرسانی فهرست</button></div><div id="admin-list"></div></section></section></main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script src="admin.js"></script></body></html>
+
+<section id="login-box" class="panel login">
+<h2>ورود مدیر</h2>
+<p class="muted">با ایمیل و رمز عبور مدیر وارد شوید.</p>
+<form id="login-form">
+<label>ایمیل<input id="email" type="email" required></label>
+<label>رمز عبور<input id="password" type="password" required></label>
+<button class="cta" type="submit">ورود به مدیریت</button>
+</form>
+<p id="login-msg" class="msg"></p>
+</section>
+
+<section id="dashboard" class="hidden">
+
+<form id="news-form" class="panel">
+<h2 id="form-title">افزودن خبر جدید</h2>
+<input id="news-id" type="hidden">
+<div class="formgrid">
+<label>عنوان خبر<input id="title" maxlength="180" required></label>
+<label>دسته‌بندی
+<select id="category">
+<option>سیاسی</option><option>اقتصادی</option>
+<option>اجتماعی</option><option>ورزشی</option>
+<option>فناوری</option><option>فرهنگ و هنر</option>
+<option>بین‌الملل</option>
+</select>
+</label>
+<label class="full">لینک تصویر<input id="image" type="url"></label>
+<label class="full">متن خبر<textarea id="body" rows="7" required></textarea></label>
+<label>نام منبع<input id="source"></label>
+<label>لینک منبع<input id="source-url" type="url"></label>
+</div>
+<div class="actions">
+<button class="cta" type="submit">ذخیره خبر</button>
+<button id="cancel-edit" class="secondary hidden" type="button">لغو ویرایش</button>
+</div>
+<p id="form-msg" class="msg"></p>
+</form>
+
+<section class="panel">
+<div class="section-head">
+<h2>خبرهای منتشرشده</h2>
+<button id="reload" class="secondary">بروزرسانی فهرست</button>
+</div>
+<div id="admin-list"></div>
+</section>
+
+<section class="panel">
+<h2>🎨 تغییر قالب سایت</h2>
+<p class="muted">ظاهر سایت را مطابق سلیقه خودت تنظیم کن.</p>
+
+<form id="theme-form">
+<label>رنگ اصلی سایت
+<input id="theme-primary" type="color" value="#142747">
+</label>
+
+<label>رنگ پس‌زمینه
+<input id="theme-background" type="color" value="#f5f7fb">
+</label>
+
+<label>رنگ نوشته‌ها
+<input id="theme-text" type="color" value="#202938">
+</label>
+
+<label>فونت سایت
+<select id="theme-font">
+<option value="Tahoma">Tahoma</option>
+<option value="Arial">Arial</option>
+<option value="Vazirmatn">Vazirmatn</option>
+</select>
+</label>
+
+<label>اندازه نوشته‌ها
+<input id="theme-size" type="number" min="12" max="24" value="16">
+</label>
+
+<label>آدرس لوگو
+<input id="theme-logo" type="url" placeholder="https://...">
+</label>
+
+<label>آدرس بنر
+<input id="theme-banner" type="url" placeholder="https://...">
+</label>
+
+<button class="cta" type="submit">ذخیره قالب</button>
+<p id="theme-msg" class="msg"></p>
+</form>
+</section>
+
+</section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script src="admin.js"></script>
+<script src="theme-admin.js"></script>
+</body>
+</html>
