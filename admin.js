@@ -1,4 +1,3 @@
-
 (() => {
   const $ = id => document.getElementById(id);
 
@@ -20,6 +19,7 @@
   }
 
   const db = window.supabase.createClient(url, key);
+  const BUCKET = 'news-files';
 
   const esc = value =>
     String(value ?? '').replace(/[&<>"']/g, char => ({
@@ -31,12 +31,41 @@
     })[char]);
 
   let editing = null;
+  let editingImageUrl = '';
+
+  async function uploadFile(file, folder) {
+    if (!file) return null;
+
+    if (file.size > 8 * 1024 * 1024) {
+      throw new Error('حجم عکس نباید بیشتر از ۸ مگابایت باشد.');
+    }
+
+    if (!file.type.startsWith('image/')) {
+      throw new Error('فقط فایل تصویری انتخاب کن.');
+    }
+
+    const extension = file.name.split('.').pop().toLowerCase();
+    const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
+
+    const { error } = await db.storage
+      .from(BUCKET)
+      .upload(path, file, {
+        cacheControl: '3600',
+        upsert: false
+      });
+
+    if (error) throw error;
+
+    const { data } = db.storage.from(BUCKET).getPublicUrl(path);
+
+    return data.publicUrl;
+  }
 
   async function state() {
     const { data, error } = await db.auth.getSession();
 
     if (error) {
-      $('login-msg').textContent = 'خطا در بررسی ورود.';
+      $('login-msg').textContent = 'خطا در بررسی ورود: ' + error.message;
       return;
     }
 
@@ -82,7 +111,8 @@
       .order('created_at', { ascending: false });
 
     if (error) {
-      $('admin-list').textContent = 'خطا در دریافت خبرها: ' + error.message;
+      $('admin-list').textContent =
+        'خطا در دریافت خبرها: ' + error.message;
       return;
     }
 
@@ -107,7 +137,9 @@
 
     document.querySelectorAll('[data-edit]').forEach(button => {
       button.onclick = () => {
-        const news = data.find(n => String(n.id) === button.dataset.edit);
+        const news = data.find(
+          n => String(n.id) === button.dataset.edit
+        );
         if (news) edit(news);
       };
     });
@@ -119,17 +151,21 @@
 
   function edit(news) {
     editing = news.id;
+    editingImageUrl = news.image_url || '';
 
     $('news-id').value = news.id;
     $('title').value = news.title || '';
     $('category').value = news.category || 'سیاسی';
-    $('image').value = news.image_url || '';
     $('body').value = news.content || '';
     $('source').value = news.source || '';
-    $('source-url').value = news.source_url || '';
+    $('image-file').value = '';
 
     $('form-title').textContent = 'ویرایش خبر';
     $('cancel-edit').classList.remove('hidden');
+
+    $('form-msg').textContent = editingImageUrl
+      ? 'عکس قبلی حفظ می‌شود؛ برای تغییر آن عکس جدید انتخاب کن.'
+      : '';
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -137,6 +173,7 @@
   function reset() {
     $('news-form').reset();
     editing = null;
+    editingImageUrl = '';
     $('news-id').value = '';
     $('form-title').textContent = 'افزودن خبر جدید';
     $('cancel-edit').classList.add('hidden');
@@ -147,32 +184,55 @@
   $('news-form').onsubmit = async event => {
     event.preventDefault();
 
-    $('form-msg').textContent = 'در حال ذخیره…';
+    const button = $('news-form').querySelector('[type="submit"]');
+    button.disabled = true;
 
-    const item = {
-      title: $('title').value.trim(),
-      category: $('category').value,
-      content: $('body').value.trim()
-    };
+    try {
+      $('form-msg').textContent = 'در حال ذخیره خبر…';
 
-    const result = editing
-      ? await db.from('news').update(item).eq('id', editing)
-      : await db.from('news').insert(item);
+      const file = $('image-file').files[0];
+      let imageUrl = editingImageUrl;
 
-    if (result.error) {
-      $('form-msg').textContent = 'ذخیره نشد: ' + result.error.message;
-      return;
+      if (file) {
+        $('form-msg').textContent = 'در حال آپلود عکس…';
+        imageUrl = await uploadFile(file, 'news');
+      }
+
+      const item = {
+        title: $('title').value.trim(),
+        category: $('category').value,
+        content: $('body').value.trim(),
+        image_url: imageUrl || null,
+        source: $('source').value.trim() || null
+      };
+
+      const result = editing
+        ? await db.from('news').update(item).eq('id', editing)
+        : await db.from('news').insert(item);
+
+      if (result.error) {
+        throw result.error;
+      }
+
+      $('form-msg').textContent = 'خبر با موفقیت ذخیره شد.';
+      reset();
+      await list();
+
+    } catch (error) {
+      $('form-msg').textContent =
+        'خطا: ' + (error.message || 'ذخیره انجام نشد.');
+    } finally {
+      button.disabled = false;
     }
-
-    $('form-msg').textContent = 'خبر با موفقیت ذخیره شد.';
-    reset();
-    await list();
   };
 
   async function remove(id) {
     if (!confirm('این خبر حذف شود؟')) return;
 
-    const { error } = await db.from('news').delete().eq('id', id);
+    const { error } = await db
+      .from('news')
+      .delete()
+      .eq('id', id);
 
     if (error) {
       alert('حذف انجام نشد: ' + error.message);
