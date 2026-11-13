@@ -5,6 +5,11 @@
   const url = window.SUPABASE_URL;
   const key = window.SUPABASE_ANON_KEY;
 
+  const show = (id, message) => {
+    const el = $(id);
+    if (el) el.textContent = message;
+  };
+
   const valid =
     window.supabase &&
     typeof url === 'string' &&
@@ -13,9 +18,8 @@
     key.length > 10;
 
   if (!valid) {
-    $('setup-warning').textContent = 'تنظیمات Supabase کامل نیست.';
-    $('setup-warning').classList.remove('hidden');
-    $('login-box').classList.add('hidden');
+    show('setup-warning', 'تنظیمات Supabase کامل نیست.');
+    $('setup-warning')?.classList.remove('hidden');
     return;
   }
 
@@ -37,30 +41,19 @@
   async function uploadFile(file, folder) {
     if (!file) return null;
 
-    if (file.size > 8 * 1024 * 1024) {
+    if (file.size > 8 * 1024 * 1024)
       throw new Error('حجم عکس نباید بیشتر از ۸ مگابایت باشد.');
-    }
 
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.startsWith('image/'))
       throw new Error('فقط فایل تصویری انتخاب کن.');
-    }
 
     const ext = file.name.split('.').pop().toLowerCase();
     const safeExt = /^[a-z0-9]+$/.test(ext) ? ext : 'jpg';
     const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${safeExt}`;
 
-    const cleanFile = new File(
-      [file],
-      `image.${safeExt}`,
-      { type: file.type }
-    );
-
     const { error } = await db.storage
       .from(BUCKET)
-      .upload(path, cleanFile, {
-        cacheControl: '3600',
-        upsert: false
-      });
+      .upload(path, file, { cacheControl: '3600', upsert: false });
 
     if (error) throw error;
 
@@ -71,45 +64,62 @@
     const { data, error } = await db.auth.getSession();
 
     if (error) {
-      $('login-msg').textContent = error.message;
+      show('login-msg', error.message);
       return;
     }
 
     const session = data.session;
 
-    $('login-box').classList.toggle('hidden', !!session);
-    $('dashboard').classList.toggle('hidden', !session);
-    $('logout').classList.toggle('hidden', !session);
+    $('login-box')?.classList.toggle('hidden', !!session);
+    $('dashboard')?.classList.toggle('hidden', !session);
+    $('logout')?.classList.toggle('hidden', !session);
 
     if (session) await list();
   }
 
-  $('login-form').addEventListener('submit', async event => {
+  async function login(event) {
     event.preventDefault();
-    $('login-msg').textContent = 'در حال ورود…';
 
-    const { error } = await db.auth.signInWithPassword({
-      email: $('email').value.trim(),
-      password: $('password').value
-    });
+    const button = $('login-form')?.querySelector('[type="submit"]');
+    if (button) button.disabled = true;
 
-    if (error) {
-      $('login-msg').textContent = 'ورود ناموفق: ' + error.message;
-      return;
+    show('login-msg', 'در حال ورود...');
+
+    try {
+      const email = $('email')?.value.trim();
+      const password = $('password')?.value;
+
+      if (!email || !password)
+        throw new Error('ایمیل و رمز عبور را وارد کن.');
+
+      const { error } = await db.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) throw error;
+
+      show('login-msg', 'ورود موفق بود.');
+      await state();
+
+    } catch (error) {
+      show('login-msg', 'خطا: ' + error.message);
+      console.error(error);
+    } finally {
+      if (button) button.disabled = false;
     }
+  }
 
-    $('login-msg').textContent = 'ورود موفق بود.';
-    await state();
-  });
+  $('login-form')?.addEventListener('submit', login);
 
-  $('logout').onclick = async () => {
+  $('logout')?.addEventListener('click', async () => {
     const { error } = await db.auth.signOut();
     if (error) alert(error.message);
     await state();
-  };
+  });
 
   async function list() {
-    $('admin-list').textContent = 'در حال دریافت خبرها…';
+    show('admin-list', 'در حال دریافت خبرها...');
 
     const { data, error } = await db
       .from('news')
@@ -117,13 +127,12 @@
       .order('created_at', { ascending: false });
 
     if (error) {
-      $('admin-list').textContent = 'خطا: ' + error.message;
+      show('admin-list', 'خطا: ' + error.message);
       return;
     }
 
-    if (!data || !data.length) {
-      $('admin-list').innerHTML =
-        '<p class="muted">هنوز خبری ثبت نشده است.</p>';
+    if (!data?.length) {
+      show('admin-list', 'هنوز خبری ثبت نشده است.');
       return;
     }
 
@@ -134,17 +143,15 @@
           <small>${esc(n.category)}</small>
         </div>
         <div>
-          <button class="secondary" data-edit="${esc(n.id)}">ویرایش</button>
-          <button class="secondary danger" data-del="${esc(n.id)}">حذف</button>
+          <button type="button" class="secondary" data-edit="${esc(n.id)}">ویرایش</button>
+          <button type="button" class="secondary danger" data-del="${esc(n.id)}">حذف</button>
         </div>
       </div>
     `).join('');
 
     document.querySelectorAll('[data-edit]').forEach(button => {
       button.onclick = () => {
-        const news = data.find(
-          n => String(n.id) === button.dataset.edit
-        );
+        const news = data.find(n => String(n.id) === button.dataset.edit);
         if (news) edit(news);
       };
     });
@@ -165,38 +172,40 @@
     $('source').value = news.source || '';
     $('image-file').value = '';
 
-    $('form-title').textContent = 'ویرایش خبر';
-    $('cancel-edit').classList.remove('hidden');
-    $('form-msg').textContent = 'عکس قبلی حفظ می‌شود مگر اینکه عکس جدید انتخاب کنی.';
+    show('form-title', 'ویرایش خبر');
+    $('cancel-edit')?.classList.remove('hidden');
+    show('form-msg', 'عکس قبلی حفظ می‌شود مگر اینکه عکس جدید انتخاب کنی.');
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   function reset() {
-    $('news-form').reset();
+    $('news-form')?.reset();
     editing = null;
     editingImageUrl = '';
-    $('news-id').value = '';
-    $('form-title').textContent = 'افزودن خبر جدید';
-    $('cancel-edit').classList.add('hidden');
+
+    if ($('news-id')) $('news-id').value = '';
+
+    show('form-title', 'افزودن خبر جدید');
+    $('cancel-edit')?.classList.add('hidden');
   }
 
-  $('cancel-edit').onclick = reset;
+  $('cancel-edit')?.addEventListener('click', reset);
 
-  $('news-form').onsubmit = async event => {
+  $('news-form')?.addEventListener('submit', async event => {
     event.preventDefault();
 
     const button = $('news-form').querySelector('[type="submit"]');
-    button.disabled = true;
+    if (button) button.disabled = true;
 
     try {
-      $('form-msg').textContent = 'در حال ذخیره خبر…';
+      show('form-msg', 'در حال ذخیره خبر...');
 
-      const file = $('image-file').files[0];
+      const file = $('image-file')?.files[0];
       let imageUrl = editingImageUrl;
 
       if (file) {
-        $('form-msg').textContent = 'در حال آپلود عکس…';
+        show('form-msg', 'در حال آپلود عکس...');
         imageUrl = await uploadFile(file, 'news');
       }
 
@@ -214,38 +223,36 @@
 
       if (result.error) throw result.error;
 
-      $('form-msg').textContent = 'خبر با موفقیت ذخیره شد.';
+      show('form-msg', 'خبر با موفقیت ذخیره شد.');
       reset();
       await list();
 
     } catch (error) {
       console.error('News save error:', error);
-      $('form-msg').textContent =
-        'خطا: ' + (error.message || 'ذخیره انجام نشد.');
+      show('form-msg', 'خطا: ' + error.message);
     } finally {
-      button.disabled = false;
+      if (button) button.disabled = false;
     }
-  };
+  });
 
   async function remove(id) {
     if (!confirm('این خبر حذف شود؟')) return;
 
-    const { error } = await db
-      .from('news')
-      .delete()
-      .eq('id', id);
+    const { error } = await db.from('news').delete().eq('id', id);
 
-    if (error) {
-      alert('حذف انجام نشد: ' + error.message);
-    } else {
-      await list();
-    }
+    if (error) alert('حذف انجام نشد: ' + error.message);
+    else await list();
   }
 
-  $('reload').onclick = list;
+  $('reload')?.addEventListener('click', list);
 
   db.auth.onAuthStateChange(() => {
     setTimeout(state, 0);
+  });
+
+  console.log('ADMIN JS LOADED', {
+    loginForm: !!$('login-form'),
+    supabase: !!window.supabase
   });
 
   state();
