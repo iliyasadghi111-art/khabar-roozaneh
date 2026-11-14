@@ -1,471 +1,268 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+/* ===== استایل اختصاصی پنل مدیریت ===== */
 
-:root {
-  --navy: #142b4d;
-  --navy2: #203e66;
-  --ink: #17263b;
-  --muted: #718096;
-  --line: #e5eaf1;
-  --bg: #f5f7fb;
-  --white: #ffffff;
-  --accent: #d8e7ff;
+.adminbody {
+  min-height: 100vh;
+  background: #f3f6fb;
+  color: #17263b;
 }
 
-* {
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  margin: 0;
-  direction: rtl;
-  font-family: 'Vazirmatn', Tahoma, sans-serif;
-  background: var(--bg);
-  color: var(--ink);
-  line-height: 1.8;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-.wrap {
-  width: min(1120px, calc(100% - 40px));
-  margin: 0 auto;
-}
-
-/* نوار بالای سایت */
-
-.top {
-  background: var(--white);
-  border-bottom: 1px solid var(--line);
-  position: relative;
-  z-index: 10;
-}
-
-.topin {
-  min-height: 82px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: var(--navy);
-  font-size: 21px;
-  font-weight: 700;
-  flex-shrink: 0;
-}
-
-.brandmark {
-  display: block;
+.adminbody .brandmark {
+  display: grid;
+  place-items: center;
   width: 48px;
   height: 48px;
   min-width: 48px;
-  object-fit: contain;
-  border-radius: 10px;
-  background: transparent;
-  flex-shrink: 0;
-}
-
-.brand small {
-  display: block;
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 400;
-  line-height: 1.5;
-}
-
-nav {
-  display: flex;
-  align-items: center;
-  gap: 28px;
-}
-
-nav a {
-  color: #526176;
-  font-size: 14px;
-  transition: color .2s;
-}
-
-nav a:hover {
-  color: var(--navy);
-}
-
-.adminlink {
-  background: var(--navy);
-  color: white;
-  padding: 9px 19px;
-  border-radius: 10px;
-  font-size: 13px;
-  white-space: nowrap;
-}
-
-.adminlink:hover,
-.cta:hover {
-  background: var(--navy2);
-}
-
-/* بخش معرفی */
-
-.hero {
-  background: linear-gradient(135deg, #142b4d, #294d7b);
-  color: white;
-  overflow: hidden;
-}
-
-.hero-in {
-  min-height: 340px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 40px;
-  padding-top: 48px;
-  padding-bottom: 48px;
-}
-
-.eyebrow {
-  display: inline-block;
-  color: #739bd1;
-  font-size: 13px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.hero .eyebrow {
-  color: #c5dcff;
-}
-
-.hero h1 {
-  margin: 8px 0 14px;
-  font-size: clamp(30px, 5vw, 48px);
-  line-height: 1.5;
+  background: #142b4d;
+  color: #fff;
+  border-radius: 12px;
+  font-size: 23px;
   font-weight: 800;
 }
 
-.hero h1 em {
-  color: #b9d5ff;
-  font-style: normal;
-}
-
-.hero p {
-  color: #d9e5f5;
-  margin: 0 0 25px;
-  font-size: 15px;
-}
-
-.cta {
-  display: inline-block;
-  background: white;
-  color: var(--navy);
-  padding: 11px 22px;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 700;
-  transition: .2s;
-}
-
-.cta:hover {
-  background: #e8f1ff;
-  color: var(--navy);
-}
-
-.hero-art {
-  width: 300px;
-  min-width: 250px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.art-card {
-  width: 260px;
-  min-height: 220px;
-  padding: 30px;
-  border: 1px solid rgba(255,255,255,.25);
-  border-radius: 24px;
-  background: rgba(255,255,255,.12);
-  box-shadow: 0 20px 50px rgba(0,0,0,.15);
-  transform: rotate(-3deg);
-}
-
-.art-card span,
-.art-card small {
-  display: block;
-  color: #d9e8ff;
-  font-size: 13px;
-}
-
-.art-card strong {
-  display: block;
-  font-size: 27px;
-  line-height: 1.7;
-  margin: 16px 0;
-}
-
-/* تصویر بنر در صورت تنظیم در پنل */
-
-#site-banner {
-  display: block;
-  width: 100%;
-  max-height: 240px;
-  object-fit: cover;
-}
-
-/* محتوای اصلی */
-
-.main {
-  padding-top: 48px;
+.adminbody .adminmain {
+  max-width: 960px;
+  padding-top: 38px;
   padding-bottom: 60px;
 }
 
-.section-head {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 25px;
+.adminbody .adminmain h1 {
+  margin: 5px 0;
+  color: #142b4d;
+  font-size: 27px;
 }
 
-.section-head h2,
-.categories h2 {
-  margin: 0;
-  color: var(--navy);
-  font-size: 25px;
-  font-weight: 800;
+.adminbody .adminmain h2 {
+  margin: 0 0 12px;
+  color: #142b4d;
+  font-size: 20px;
 }
 
-.muted {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.notice {
-  padding: 13px 16px;
-  background: #fff7e6;
-  color: #805b16;
-  border: 1px solid #f2dfb5;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  font-size: 13px;
-}
-
-.hidden {
-  display: none !important;
-}
-
-/* کارت خبرها */
-
-.news-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
-}
-
-.news-card {
-  min-width: 0;
-  overflow: hidden;
-  background: white;
-  border: 1px solid var(--line);
-  border-radius: 17px;
-  padding: 22px;
-  box-shadow: 0 5px 20px rgba(20,43,77,.04);
-  transition: transform .2s, box-shadow .2s;
-}
-
-.news-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(20,43,77,.09);
-}
-
-.news-card img {
+.adminbody .panel {
   display: block;
   width: 100%;
-  max-height: 220px;
-  object-fit: cover;
-  border-radius: 11px;
-  margin-bottom: 15px;
+  margin-bottom: 24px;
+  padding: 26px;
+  background: #fff;
+  border: 1px solid #e5eaf1;
+  border-radius: 17px;
+  box-shadow: 0 5px 22px rgba(20, 43, 77, .06);
 }
 
-.news-card h3 {
-  color: var(--navy);
-  font-size: 18px;
-  line-height: 1.8;
-  margin: 0 0 10px;
+.adminbody .login {
+  max-width: 520px;
+  margin: 35px auto;
 }
 
-.news-card p {
-  color: #59677a;
-  font-size: 14px;
-  line-height: 2;
-  margin: 0 0 12px;
-  overflow-wrap: anywhere;
+.adminbody #login-form {
+  display: grid;
+  gap: 17px;
+  margin-top: 22px;
 }
 
-.news-card small {
-  color: var(--muted);
-  font-size: 12px;
-}
-
-.empty {
-  grid-column: 1 / -1;
-  padding: 35px 20px;
-  text-align: center;
-  background: white;
-  border: 1px dashed #cbd5e1;
-  border-radius: 15px;
-  color: var(--muted);
-}
-
-/* دسته‌بندی‌ها */
-
-.categories {
-  margin-top: 65px;
-}
-
-.chips {
+.adminbody label {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #35445a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.adminbody input:not([type="file"]),
+.adminbody select,
+.adminbody textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 12px 13px;
+  border: 1px solid #dce3ed;
+  border-radius: 10px;
+  background: #fff;
+  color: #17263b;
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.adminbody input:focus,
+.adminbody select:focus,
+.adminbody textarea:focus {
+  border-color: #3869a8;
+  box-shadow: 0 0 0 3px rgba(56, 105, 168, .12);
+}
+
+.adminbody input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  border: 1px dashed #bdc9d9;
+  border-radius: 10px;
+  background: #f8faff;
+  font-family: inherit;
+}
+
+.adminbody textarea {
+  resize: vertical;
+  line-height: 2;
+}
+
+.adminbody .formgrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.adminbody .formgrid .full {
+  grid-column: 1 / -1;
+}
+
+.adminbody .actions {
+  display: flex;
+  align-items: center;
   flex-wrap: wrap;
   gap: 12px;
   margin-top: 20px;
 }
 
-.chips span {
-  display: inline-block;
-  background: white;
-  color: var(--navy);
-  border: 1px solid var(--line);
-  border-radius: 30px;
-  padding: 8px 19px;
+.adminbody button {
+  cursor: pointer;
+  font-family: inherit;
+  transition: .2s;
+}
+
+.adminbody .cta,
+.adminbody .secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 9px 20px;
+  border: 0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.adminbody .cta {
+  background: #142b4d;
+  color: #fff;
+}
+
+.adminbody .cta:hover {
+  background: #294d7b;
+}
+
+.adminbody .secondary {
+  background: #edf2f8;
+  color: #203e66;
+}
+
+.adminbody .secondary:hover {
+  background: #dce7f5;
+}
+
+.adminbody .secondary.danger {
+  background: #fff0f0;
+  color: #bd3030;
+}
+
+.adminbody .secondary.danger:hover {
+  background: #ffdddd;
+}
+
+.adminbody button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.adminbody .msg {
+  min-height: 22px;
+  margin: 12px 0 0;
+  color: #3869a8;
   font-size: 13px;
+  overflow-wrap: anywhere;
 }
 
-/* پایین سایت */
-
-footer {
-  background: #102541;
-  color: white;
-  padding: 28px 0;
-}
-
-.foot {
+.adminbody .adminitem {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
+  gap: 15px;
+  padding: 16px 0;
+  border-bottom: 1px solid #e9edf3;
 }
 
-.brand.light {
-  color: white;
+.adminbody .adminitem:last-child {
+  border-bottom: 0;
 }
 
-.brand.light small {
-  color: #bdcce0;
+.adminbody .adminitem strong {
+  display: block;
+  color: #203e66;
+  font-size: 14px;
 }
 
-.foot > span {
-  color: #bdcce0;
+.adminbody .adminitem small {
+  display: block;
+  margin-top: 5px;
+  color: #718096;
   font-size: 12px;
 }
 
-/* نمایش در موبایل */
-
-@media (max-width: 800px) {
-  .topin {
-    flex-wrap: wrap;
-    padding-top: 14px;
-    padding-bottom: 14px;
-  }
-
-  nav {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
-
-  .hero-in {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 25px;
-  }
-
-  .hero-art {
-    width: 100%;
-  }
-
-  .news-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.adminbody .adminitem > div:last-child {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-@media (max-width: 520px) {
-  .wrap {
-    width: calc(100% - 28px);
+.adminbody #theme-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+
+.adminbody #theme-form button,
+.adminbody #theme-form .msg {
+  grid-column: 1 / -1;
+}
+
+.adminbody #theme-form input[type="color"] {
+  width: 100%;
+  height: 48px;
+  padding: 4px;
+  border: 1px solid #dce3ed;
+  border-radius: 10px;
+  background: white;
+}
+
+@media (max-width: 600px) {
+  .adminbody .adminmain {
+    padding-top: 25px;
   }
 
-  .topin {
-    gap: 12px;
+  .adminbody .panel {
+    padding: 18px;
   }
 
-  .brand {
-    font-size: 18px;
-  }
-
-  .brandmark {
-    width: 42px;
-    height: 42px;
-    min-width: 42px;
-  }
-
-  nav {
-    gap: 13px;
-  }
-
-  nav a {
-    font-size: 12px;
-  }
-
-  .adminlink {
-    padding: 7px 12px;
-    font-size: 12px;
-  }
-
-  .hero-in {
-    padding-top: 35px;
-    padding-bottom: 35px;
-  }
-
-  .hero-art {
-    display: none;
-  }
-
-  .section-head {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .news-grid {
+  .adminbody .formgrid,
+  .adminbody #theme-form {
     grid-template-columns: 1fr;
   }
 
-  .news-card {
-    padding: 17px;
+  .adminbody .formgrid .full,
+  .adminbody #theme-form button,
+  .adminbody #theme-form .msg {
+    grid-column: auto;
   }
 
-  .foot {
+  .adminbody .adminitem {
+    align-items: flex-start;
     flex-direction: column;
+  }
+
+  .adminbody .section-head {
     align-items: flex-start;
   }
 }
