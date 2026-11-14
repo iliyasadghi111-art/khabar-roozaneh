@@ -261,7 +261,9 @@
     align-items: flex-start;
     flex-direction: column;
   }
-
+.adminbody .hidden {
+  display: none !important;
+}
   .adminbody .section-head {
     align-items: flex-start;
   }
