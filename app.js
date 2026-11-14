@@ -64,26 +64,30 @@
       document.body.style.fontSize = Number(data.font_size) + 'px';
     }
 
-    // جایگزینی حرف خ با لوگوی تصویری
-    const brand = document.querySelector('.brand');
+    // حذف لوگوی تکراری قدیمی
+    document.querySelectorAll('#site-logo').forEach(logo => logo.remove());
 
-    if (brand && data.logo_url) {
-      const oldMark = brand.querySelector('.brandmark');
-      if (oldMark) oldMark.remove();
+    // اطمینان از وجود لوگوی تصویری در سربرگ و پایین صفحه
+    document.querySelectorAll('.brand').forEach(brand => {
+      const mark = brand.querySelector('.brandmark');
 
-      let logo = $('site-logo');
+      if (mark && mark.tagName !== 'IMG') {
+        mark.remove();
+      }
 
-      if (!logo) {
+      let logo = brand.querySelector('img.brandmark');
+
+      if (!logo && data.logo_url) {
         logo = document.createElement('img');
-        logo.id = 'site-logo';
+        logo.className = 'brandmark';
         logo.alt = 'لوگوی خبر روزانه';
-        logo.style.cssText =
-          'width:42px;height:42px;object-fit:contain;border-radius:8px;flex-shrink:0;';
         brand.prepend(logo);
       }
 
-      logo.src = data.logo_url;
-    }
+      if (logo && data.logo_url) {
+        logo.src = data.logo_url;
+      }
+    });
 
     // بنر
     const hero = document.querySelector('.hero');
