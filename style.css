@@ -19,3 +19,7 @@
 #site-logo {
   display: none !important;
 }
+/* حذف لوگوی تکراری که app.js اضافه می‌کند */
+#site-logo {
+  display: none !important;
+}
