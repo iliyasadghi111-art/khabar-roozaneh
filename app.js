@@ -39,14 +39,12 @@
       return;
     }
 
-    // حفظ ظاهر اصلی سرمه‌ای و سفید
     const root = document.documentElement;
     root.style.setProperty('--navy', '#142b4d');
     root.style.setProperty('--navy2', '#203e66');
     root.style.setProperty('--ink', '#17263b');
     root.style.setProperty('--bg', '#f5f7fb');
 
-    // فقط فونت قابل تغییر باشد
     if (data.font_url) {
       try {
         const font = new FontFace(
@@ -55,7 +53,8 @@
         );
         await font.load();
         document.fonts.add(font);
-        document.body.style.fontFamily = 'CustomSiteFont, Vazirmatn, Tahoma, sans-serif';
+        document.body.style.fontFamily =
+          'CustomSiteFont, Vazirmatn, Tahoma, sans-serif';
       } catch (e) {
         console.error('Font error:', e);
       }
@@ -65,16 +64,21 @@
       document.body.style.fontSize = Number(data.font_size) + 'px';
     }
 
-    // لوگو
+    // جایگزینی حرف خ با لوگوی تصویری
     const brand = document.querySelector('.brand');
+
     if (brand && data.logo_url) {
+      const oldMark = brand.querySelector('.brandmark');
+      if (oldMark) oldMark.remove();
+
       let logo = $('site-logo');
 
       if (!logo) {
         logo = document.createElement('img');
         logo.id = 'site-logo';
         logo.alt = 'لوگوی خبر روزانه';
-        logo.style.cssText = 'width:42px;height:42px;object-fit:contain;border-radius:8px;';
+        logo.style.cssText =
+          'width:42px;height:42px;object-fit:contain;border-radius:8px;flex-shrink:0;';
         brand.prepend(logo);
       }
 
@@ -83,6 +87,7 @@
 
     // بنر
     const hero = document.querySelector('.hero');
+
     if (hero && data.banner_url) {
       let banner = $('site-banner');
 
@@ -90,7 +95,8 @@
         banner = document.createElement('img');
         banner.id = 'site-banner';
         banner.alt = 'بنر خبر روزانه';
-        banner.style.cssText = 'display:block;width:100%;max-height:220px;object-fit:cover;';
+        banner.style.cssText =
+          'display:block;width:100%;max-height:220px;object-fit:cover;';
         hero.prepend(banner);
       }
 
