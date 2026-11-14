@@ -64,20 +64,16 @@
       document.body.style.fontSize = Number(data.font_size) + 'px';
     }
 
-    // حذف لوگوی تکراری قدیمی
+    // لوگو: فقط لوگوی تصویری HTML باقی بماند
     document.querySelectorAll('#site-logo').forEach(logo => logo.remove());
 
-    // اطمینان از وجود لوگوی تصویری در سربرگ و پایین صفحه
     document.querySelectorAll('.brand').forEach(brand => {
-      const mark = brand.querySelector('.brandmark');
-
-      if (mark && mark.tagName !== 'IMG') {
-        mark.remove();
-      }
-
       let logo = brand.querySelector('img.brandmark');
 
       if (!logo && data.logo_url) {
+        const oldMark = brand.querySelector('.brandmark');
+        if (oldMark) oldMark.remove();
+
         logo = document.createElement('img');
         logo.className = 'brandmark';
         logo.alt = 'لوگوی خبر روزانه';
@@ -89,10 +85,11 @@
       }
     });
 
-    // بنر
+    // بنر: بیرون از hero-in قرار می‌گیرد تا چیدمان خراب نشود
     const hero = document.querySelector('.hero');
+    const heroIn = document.querySelector('.hero-in');
 
-    if (hero && data.banner_url) {
+    if (hero && heroIn && data.banner_url) {
       let banner = $('site-banner');
 
       if (!banner) {
@@ -100,11 +97,14 @@
         banner.id = 'site-banner';
         banner.alt = 'بنر خبر روزانه';
         banner.style.cssText =
-          'display:block;width:100%;max-height:220px;object-fit:cover;';
-        hero.prepend(banner);
+          'display:block;width:100%;height:120px;object-fit:cover;margin-bottom:20px;border-radius:12px;';
+        hero.insertBefore(banner, heroIn);
       }
 
       banner.src = data.banner_url;
+    } else {
+      const oldBanner = $('site-banner');
+      if (oldBanner) oldBanner.remove();
     }
   }
 
